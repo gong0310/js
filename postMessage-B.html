@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // B.html
+      // B发送数据给A
+      const opener = window.opener;
+      opener.postMessage('B传过去的', "http://127.0.0.1:5500");
+      // URI必须是opener窗口所在在的URI
+      // 意思就是说，如果是从 http://127.0.0.1:5500 中的某个页面将B页面打开，那么就能成功发送跨文档信息
+      // 如果讲此处的URI换成"*"，就意味着任何网页打开B页面，都能收到B页面传输的信息
+
+      // 监听A传过来的
+      window.addEventListener("message", (e) => {
+        console.log(e.data);
+        console.log(e.origin);
+        console.log(e.source);
+      });
+
+    </script>
+  </body>
+</html>

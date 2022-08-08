@@ -1,0 +1,14 @@
+ yarn add vite -D
+
+ 修改
+  "scripts": {
+    "dev": "vite"
+  },
+
+
+   index3   基于node
+   npm i nodemon -s
+  "serve": "nodemon ./index3.js"
+
+
+   npm i node-fetch -s

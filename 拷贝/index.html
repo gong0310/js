@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // let arr = ['s', 'g', 'h', 't']
+        // let obj = {
+        //     name: '小明',
+        //     age: 20
+        // }
+        // for (const item of arr) {
+        //     console.log(item)
+        // }
+        // //    for (const item of obj) {//报错，没有部署原生的 iterator(遍历器) 接口,obj不可跌代
+        // //        console.log(item)
+        // //    }
+        // console.log({
+        //     ...obj
+        // })
+        let obj = {
+            name: '小明',
+            age: 21,
+            info: {
+                hobby: ['唱歌', '跳舞', {
+                    a: 1
+                }],
+                career: {
+                    teacher: 4,
+                    engineer: 9
+                }
+            }
+        }
+        //Es5深拷贝
+        function deepClone(origin, target) {
+            let tar = target || {}
+            let toStr = Object.prototype.toString
+            for (let k in origin) {
+                if (origin.hasOwnProperty(k)) { //判断是不是自己的原型
+                    if (typeof origin[k] === 'object' && origin[k] !== null) { //判断是不是object
+                        tar[k] = toStr.call(origin[k]) === '[object Array]' ? [] : {}; //判断是不是数组类型
+                        deepClone(origin[k], tar[k])
+                    } else {
+                        tar[k] = origin[k]
+                    }
+                }
+            }
+            return tar;
+        }
+        console.log(deepClone(obj, {
+            name2: 'lll'
+        }))
+        console.log('---------------------------')
+        let deepobj = deepClone(obj)
+        console.log('deepobj=>', deepobj)
+        obj.name = '小红'
+        console.log('obj=>',obj)
+        console.log('deepobj=>', deepobj)
+
+
+        // console.log(Object.prototype.toString.call({}))
+        // console.log(Object.prototype.toString.call([]))
+        console.log(typeof null)
+        console.log(null instanceof Object)
+
+        console.log('---------------------------')
+        //Es6深拷贝
+        function deepCloneEs6(origin, hashMap = new WeakMap()) {
+            if (origin == undefined || typeof origin !== 'object') {
+                return origin
+            }
+            if (origin instanceof Date) {
+                return new Date(origin)
+            }
+            if (origin instanceof RegExp) {
+                return new RegExp(origin)
+            }
+            const hashKey = hashMap.get(origin)
+            if (hashKey) {
+                return hashKey
+            }
+
+            const target = new origin.constructor(); //origin它的原型构造器,
+            hashMap.set(origin, target)
+            for (let k in origin) {
+                if (origin.hasOwnProperty(k)) { //判断是不是自己的原型
+                    target[k] = deepCloneEs6([origin[k]], hashMap)
+                }
+            }
+        }
+        let deepobjEs6 = deepClone(obj)
+        console.log('deepobjEs6', deepobjEs6)
+        obj.info.hobby[2].a = 123
+        console.log(obj)
+        console.log('deepobjEs6', deepobjEs6)
+    </script>
+</body>
+
+</html>

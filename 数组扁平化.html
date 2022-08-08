@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      // 数组扁平化是指将一个多维数组变为一维数组
+
+      //调用 ES6 中的 flat 方法
+      console.log([1, [2, 3, [4, 5, [6, 7]]]].flat(Infinity));
+      //普通递归
+      let result = [];
+      let flatten = function (arr) {
+        for (let i = 0; i < arr.length; i++) {
+          let item = arr[i];
+          if (Array.isArray(arr[i])) {
+            flatten(item);
+          } else {
+            result.push(item);
+          }
+        }
+        return result;
+      };
+
+      //toString & split
+      function flatten1(arr) {
+        return arr
+          .toString()
+          .split(",")
+          .map(function (item) {
+            return Number(item);
+          });
+      }
+      let test = [1, ["2", 3, [4, 5, [6, 7]]]];
+
+      console.log("===>", test.join(","));
+
+      //join & split
+      function flatten2(arr) {
+        return arr
+          .join(",")
+          .split(",")
+          .map(function (item) {
+            return parseInt(item);
+          });
+      }
+      //reduce
+      function flatten3(arr) {
+        return arr.reduce((result, item) => {
+          return result.concat(Array.isArray(item) ? flatten3(item) : item);
+        }, []);
+      }
+      //扩展运算符
+      function flatten4(arr) {
+        while (arr.some((item) => Array.isArray(item))) {
+          arr = [].concat(...arr);
+        }
+        return arr;
+      }
+      let arr = [1, "2", [3, 4], [5, [6, 7]]];
+      console.log(flatten4(arr));
+      // --------------------------------------
+      //数组去重
+      let aa = [1, 2, 2, 4, 9, 6, 7, 5, 2, 3, 5, 6, 5];
+      let newaa = [];
+      // includes/indexOf同理
+      aa.forEach((i) => {
+        if (!newaa.includes(i)) {
+          newaa.push(i);
+        }
+      });
+      console.log("结果=>", newaa);
+
+      //利用 ES6 的 set 方法
+      // Set和Map类似，也是一组key的集合，但不存储value。由于key不能重复，所以，在Set中，没有重复的key。
+      function lyf(arr) {
+        console.log("结果=>", "new Set(arr)", new Set(arr));
+
+        return Array.from(new Set(arr)); // 利用Array.from将Set结构转换成数组
+      }
+      console.log(lyf(aa));
+
+      //双重for循环
+      function lyf2(arr) {
+        for (var i = 0; i < arr.length; i++) {
+          for (var j = i + 1; j < arr.length; j++) {
+            if (arr[i] == arr[j]) {
+              //如果第一个等于第二个，splice方法删除第二个
+              arr.splice(j, 1);
+              j--;
+            }
+          }
+        }
+        return arr;
+      }
+      console.log(lyf2(aa));
+      //获取函数名
+      Function.prototype.getName = function () {
+        return this.name || this.toString().match(/function\s*([^(]*)\(/)[1];
+      };
+      console.log("结果=>", lyf2.getName());
+    </script>
+  </body>
+</html>

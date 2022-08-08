@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <!-- this -->
+    <input type="text" />
+    <script>
+      //全局变量,全局作用域
+      let a = "aaa";
+
+      function fn1() {
+        let b = 1;
+        console.log(a);
+      }
+      console.log(b); //报错,因为fn1执行后,b会被销毁掉，被垃圾回收机制回收掉
+      fn1();
+      /**
+       * 一个可以从内部调用外部函数的变量就是闭包。主要讲一下他的缺点会导致内存泄露，
+       * 然后要指定Null解决内存泄露，作用是模仿块级作用域
+       */
+      // 闭包，私有作用域,数据的私有
+
+      /**
+       * 1.vue data是一个函数：Object是引用数据类型，如果不用function返回，
+       * 每个组件的data都是内存的同一个地址，
+       * 一个数据改变了其他也改变了，
+       * 2.JavaScript只有函数构成作用域(注意理解作用域，只有函数{}构成作用域,对象的{}以及if(){}都
+       * 不构成作用域),data是一个函数时，每个组件实例都有自己的作用域，每个实例相互独立，
+       * 不会相互影响。类似于形成了一个闭包
+       * */
+
+      // --------------------------------------------------
+
+      //防抖是一定时间内只允许一个事件，input搜索联想，每次 resize/scroll 触发统计事件
+      function antiShake(fn, wait) {
+        let timeOut = null;
+        return (args) => {
+          if (timeOut) clearTimeout(timeOut);
+          timeOut = setTimeout(fn, wait);
+        };
+      }
+
+      function demo2() {
+        console.log("请求数据了");
+      }
+      let telInput = document.querySelector("input");
+      telInput.addEventListener("input", antiShake(demo2, 1000));
+      /**
+       * 节流是:一定时间内js方法只跑一次。让一个函数无法在短时间内连续调用，只有当上一次函数执行后，过了规定的时间间隔，才能进行下一次该函数的调用
+       * --->Canvas 模拟画板功能，DOM 元素的拖拽功能实现,
+       * 计算鼠标移动的距离,监听滚动事件判断是否到页面底部自动加载更多
+       */
+
+      // --------------------------------------------------
+      /**
+       * 1.var可以重复定义赋值，后面的覆盖前面的,let会报错。
+       * 2.var没有块级作用域,会出现变量污染。
+       * 3.var可以声明提升，let会报错。
+       */
+      console.log(b); //undefined
+      var b = "aaa";
+      var b = "bbb";
+      console.log(b);
+    </script>
+  </body>
+</html>

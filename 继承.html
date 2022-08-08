@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="./es6.js"></script>
+    <script>
+      /**
+       * 原型链继承
+       * 子类将其原型对象指向父类的实例，根据原型链就可以使用到父类的方法和属性
+       * 本质： 是改变 构造函数的.prototype的指向
+       */
+      // 父类
+      //   function Parent() {
+      //     this.name = ["父类"];
+      //     this.introduce = function () {
+      //       console.log("my name is" + this.name);
+      //     };
+      //   }
+      //   // 子类
+      //   function Child() {
+      //     this.childname = ["子类"];
+      //   }
+
+      //   // 核心代码：
+      //   Child.prototype = new Parent();
+      //   var child1 = new Child();
+      //   child1.name[0] = "child1唱歌";
+      //   var child2 = new Child();
+      //   child2.name[0] = "child2跳舞";
+      //   console.log(child1.name);
+      //   console.log(child2.name);
+      // 缺点: 所有新实例都共用父类的属性，如果一个实例修改了原型会影响其它的实例。只能继承一个。
+      // 无法向父类传参
+
+      /**
+       * 构造函数继承
+       * 在子类的构造函数中，执行父类的构造函数，并且为其绑定子类的this
+       */
+      //   // 父类
+      //   function Parent(name) {
+      //     this.name = ["父类", name];
+      //     this.introduce = function () {
+      //       console.log("父类上的introduce方法", name);
+      //     };
+      //   }
+      //   Parent.prototype.sayhi = function () {
+      //     console.log("父类原型上的sayhi方法");
+      //   };
+      //   // 子类
+      //   function Child(name, like) {
+      //     this.childname = ["子类"];
+      //     Parent.call(this, name, like);
+      //   }
+
+      //   var child1 = new Child("小红", "apple");
+      //   child1.introduce();
+      //   child1.sayhi(); //报错
+      //   //缺点: 可以继承到父类上的属性和方法，但是继承不到父类原型上的属性和方法
+
+      /**
+       * 原型链加构造函数继承(组合继承)
+       */
+      // 父类
+      //   function Parent(name) {
+      //     this.name = [name];
+      //     this.introduce = function () {
+      //       console.log("父类上的introduce方法");
+      //     };
+      //   }
+      //   Parent.prototype.sayhi = function () {
+      //     console.log("父类原型上的sayhi方法");
+      //   };
+      //   // 子类
+      //   function Child(name, like) {
+      //     this.childname = ["子类"];
+      //     Parent.call(this, name, like); // 第二次调用Parent
+      //   }
+
+      //   Child.prototype = new Parent(); // 第一次调用Parent
+
+      //   var child1 = new Child("小红", "apple");
+      //   var child2 = new Child("小明", "orange");
+      //   console.log(child1.name);
+      //   console.log(child2.name);
+      //   缺点: 第一次调用Parent(),在Child.prototype写入了父类的name和introduce属性和方法，
+      //   第二次再调用Parent（）， 给实例child1又写入了name和introduce属性和方法。
+      //   实例child1上的name和introduce屏蔽了原型对象Parent.prototype的两个同名属性，
+      //   所以组合模式的缺点就在使用子类创建实例对象的时候，其原型中会存在两份相同的属性和方法.所以会比较耗内存
+
+      /**
+       * 寄生组合式继承
+       */
+      // 父类
+      //   function Parent() {
+      //     this.name = ["父类"];
+      //     this.introduce = function () {
+      //       console.log("父类上的introduce方法");
+      //     };
+      //   }
+      //   Parent.prototype.sayhi = function () {
+      //     console.log("父类原型上的sayhi方法");
+      //   };
+      //   // 子类
+      //   function Child() {
+      //     this.childname = ["子类"];
+      //     Parent.call(this); // 核心代码
+      //   }
+      //   Child.prototype = Object.create(Parent.prototype); // 核心代码，利用一个空对象作为中介、将父类原型直接赋值给空对象构造函数的原型
+
+      //   const child1 = new Child();
+      //   const child2 = new Child();
+      //   child1.name[0] = "child1";
+      //   child2.name[0] = "child2";
+      //   console.log(child1);
+      //   console.log(child1.name);
+      //   console.log(child2.name);
+
+      // 完美解决原型链加构造函数继承的缺点
+
+      /**
+       * es6 通过 class 定义一个类，再用 extends 进行继承，通过 super 继承父类的属性或方法
+       * 底层类似寄生组合式继承
+       */
+      class Parent {
+        constructor(name, age) {
+          this.name = name;
+          this.age = age;
+        }
+        drink() {
+          console.log("喝水");
+        }
+      }
+      class Per extends Parent {
+        constructor(name, age, sex) {
+          super(name, age);
+          this.sex = sex;
+        }
+        drink() {
+          super.drink();
+        }
+      }
+      const p = new Per("Rory", 22, "男");
+      console.log(p);
+    </script>
+  </body>
+</html>

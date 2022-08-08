@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .AssA {
+            width: 100px;
+            height: 100px;
+            background-color: wheat;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="AssA">
+
+    </div>
+    <input type="text" name="" id="uName">
+    订阅视图-1：<span class="box-1"></span>
+    订阅视图-2：<span class="box-2"></span>
+    <script>
+        /**
+         * jQuery,zepto:
+         * 优点:
+         * 1.提高了开发效率，进行了很多dom操作封装
+         * 2.兼容性处理
+         * 缺点:
+         * 1.本质还是操作dom,必然带来性能的损耗(性能不友好，大量的重绘与重排，回流)，效率低
+         * 2.没有做业务分层，没有组件化编码方案，代码全部写在一起，代码复用率低
+         */
+
+        /**
+         * vue1.0没有虚拟dom，有n个watcher,一个dom对应一个watcher,不需要虚拟计算,少量数据渲染快,性能好；但是大量数据操作的时候，
+         * 就导致大量操作dom(本质依旧是操作dom)，性能不好。
+         * 
+         * vue2.0:
+         * 1.虚拟dom加入--->坏处(第一次渲染会变慢)
+         * 2.虚拟dom的本质是---js对象
+         * 3.好处->js代码执行效率损耗<直接操作dom，后面更新会快
+         * 4.虚拟dom如何提示渲染效率--->按需渲染,把dom操作放在了js里面
+         * 
+         * 
+         * 组件标签大写，小写为html同名标签
+         * 
+         * React:
+         * 跟vue一样虚拟dom,声明式编码，组件化模式
+         * 创建虚拟dmo方式：jsx,js
+         * 使用jsx创建虚拟dom优点:使用js创建要一直createElement套娃,太繁琐了。jsx直接正常写html标签就可以了,
+         * 不过jsx最后还是经过babel编译成js createElement，不过我们写起来方便
+         * 
+         * 关于虚拟dom:
+         * 1.本质是object类型的对象
+         * 2.虚拟dom比较轻，真实dom比较重，因为虚拟dom是react内部再用，无需真实dom那么多的属性方法
+         * 3.虚拟dom最终会被react转化为真实dom,呈现在页面上
+         * 
+         * 优点：
+         * 1.React Native可以使用React进行移动端开发
+         * 2.使用虚拟dom+优秀的diffing 算法，尽量减少与真实dom的交互
+         */
+
+
+        //v-model
+        let obj = {}
+        //  1.要操作的对象
+        //  2.要操作的属性
+        //  3.具体值
+        //数据劫持
+        Object.defineProperty(obj, 'username', {
+            get: function () {
+                console.log('取值')
+            },
+            set: function (val) {
+                console.log('赋值')
+                document.getElementsByClassName('AssA')[0].innerText = val
+            },
+        })
+        document.getElementById('uName').addEventListener('keyup', function (e) {
+            obj.username = e.target.value
+        })
+
+        // ----------------------------------------------------
+        //订阅器模型
+        let Dep = {
+            //容器
+            clientList: {},
+            //订阅方法
+            listen: function (key, fn) {
+                if (!this.clientList[key]) {
+                    this.clientList[key] = []
+                }
+                this.clientList[key].push(fn)
+            },
+            //发布方法
+            trigger: function () {
+                let key = Array.prototype.shift.call(arguments)
+                fns = this.clientList[key]
+                if (!fns || fns.length == 0) {
+                    return false
+                }
+                for (let i = 0, fn; fn = fns[i++];) {
+                    fn.apply(this, arguments)
+                }
+            }
+        }
+        //劫持方法
+        let dataHijack = function ({
+            data,
+            tag,
+            datakey,
+            selector
+        }) {
+            let value = '',
+                el = document.querySelector(selector)
+            Object.defineProperty(data, datakey, {
+                get: function () {
+                    console.log('取值')
+                    return value
+                },
+                set: function (newVal) {
+                    console.log('赋值')
+                    value = newVal
+                    //数据改变，通知所有订阅者
+                    Dep.trigger(tag, newVal)
+                },
+            })
+            // new Proxy(data, {
+            //     get: function (data,prop) {
+            //         console.log('取值')
+            //         return data[prop]
+            //     },
+            //     set: function (data,prop,newVal) {
+            //         console.log('赋值')
+            //         data[prop] = newVal
+            //     },
+            // })
+            //添加订阅者
+            Dep.listen(tag, function (text) {
+                el.innerText = text
+            })
+        }
+
+
+
+        let dataObj = {}
+        dataHijack({
+            data: dataObj,
+            tag: 'view-1',
+            datakey: 'one',
+            selector: '.box-1',
+        })
+        dataHijack({
+            data: dataObj,
+            tag: 'view-2',
+            datakey: 'two',
+            selector: '.box-2',
+        })
+        dataObj.one = '啦啦啦啦啦'
+    </script>
+    
+</body>
+
+</html>

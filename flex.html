@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        ul,
+        li {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul {
+            width: 300px;
+            height: 600px;
+            background-color: #f6f6fa;
+
+
+            display: flex;
+            /* flex-direction: row-reverse;
+            flex-wrap: wrap; */
+            /* 屏幕宽度边小，如果不设置换行，那么子元素宽度压缩 */
+            flex-flow: row wrap;
+            justify-content: space-around;
+            align-items: center;
+            /* align-items: center;把里面子元素，排列居中 */
+            /* align-content: center; */
+            /* align-content: center;把所有看作一个整体合起来，一起居中 */
+
+        }
+
+        li {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            margin: 5px;
+            display: inline-block;
+            text-align: center;
+            font-size: 20px;           
+        }
+        li span{
+            word-wrap: break-word;
+        }
+
+        .big {
+            width: 500px;
+            height: 600px;
+            background-color: #cccccc;
+            display: flex;
+        }
+
+        .big .child {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            margin: 5px;
+            display: inline-block;
+            /* flex-basis: 50px; */
+            /* flex-basis宽度基准值，设置后width失效，以这个为准 */
+          
+        }
+
+        .big .child:nth-child(1) {
+            flex-basis: 70px;
+            /* flex-shrink: 0;     表示不会缩小      */
+        }
+        /* flex-grow: 1;  在父元素中，剩余宽度所占比例------父元素宽度有多 */
+        .big .child:nth-child(2) {
+            flex-grow: 1;     
+        }
+        .big .child:nth-child(3) {
+            flex-grow: 1;     
+        }
+        /* flex-shrink: 1;  在父元素中，宽度不够要压缩所占比例------父元素宽度不够 */
+        .big .child:nth-child(4) {
+            /* flex-shrink: 1;     */
+        }
+        /* 缩写flex:flex-grow  flex-shrink flex-basis */
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li><span>11456165165165165165165165161651</span></li>
+        <li><span>11456</span></li>
+        <li><span>11456165165161651</span></li>
+        <li><span>11456165161</span></li>
+        <li><span>114561651</span></li>
+    </ul>
+    <div class="big">
+        <div class="child"></div>
+        <div class="child"></div>
+        <div class="child"></div>
+        <div class="child"></div>
+    </div>
+</body>
+
+</html>

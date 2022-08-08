@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .div1 {
+        width: 100px;
+        height: 100px;
+        background-color: palegoldenrod;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="div1"></div>
+    <script>
+      // 事件委托指的是事件可以绑定到其他节点上来触发你想要触发的目标节点的事件
+      // 利用事件冒泡的原理，让自己的所触发的事件，让他的父元素代替执行！
+      // 首先有个问题，如果你想给同一个dom元素注册多个同类型事件，你会发现通过普通直接绑定无法实现，
+      //       绑定多个事件只会出发最后一个绑定的事件
+      let div1 = document.getElementsByClassName("div1")[0];
+      let body = document.getElementsByTagName("body")[0];
+      div1.onclick = function () {
+        console.log("1");
+      };
+      div1.onclick = function () {
+        console.log("2");
+      };
+      div1.onclick = function () {
+        console.log("3");
+      };
+      // 事件捕获：当一个事件出发之后，从window对象触发，不断经过下级节点，
+      //       直到目标节点。在时间到达目标节点之前的这个过程就是捕获过程，所有经过的节点，
+      //       都会触发相对应的事件。
+      // 事件冒泡：和捕获过程相反，沿着捕获的路线原路返回，所有经过的节点时间都会被触发
+      // 默认false，即冒泡事件，true则为捕获事件；
+      /**
+       * 如果你将 <p> 元素插入到 <div> 元素中，用户点击 <p> 元素, 哪个元素的 "click" 事件先被触发呢？
+       * 在 冒泡 中，内部元素的事件会先被触发，然后再触发外部元素，即： <p> 元素的点击事件先触发，然后会触发 <div> 元素的点击事件。
+       * 在 捕获 中，外部元素的事件会先被触发，然后才会触发内部元素的事件，即： <div> 元素的点击事件先触发 ，然后再触发 <p> 元素的点击事件。
+       */
+      div1.addEventListener("click", function (e) {
+        console.log("div4");
+        e.stopPropagation(); //阻止往外冒泡
+      });
+      body.addEventListener(
+        "click",
+        function (e) {
+          // e.stopPropagation()//阻止往内捕获
+          console.log("body");
+        },
+        true
+      );
+      // 控制台结果：点击div之后 ，会先触发div的事件，
+      //      再向上一层冒泡，触发到body的事件；如果只点击到body是只会触发body的事件。
+
+      // Promise
+      let axios = new Promise((res, rej) => {
+        res("成功");
+        rej("失败");
+      });
+      axios.then(
+        (res) => {
+          console.log(res);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+
+      //切菜
+      function cutUp() {
+        console.log("开始切菜。");
+        var p = new Promise(function (resolve, reject) {
+          //做一些异步操作
+          setTimeout(function () {
+            console.log("切菜完毕！");
+            resolve("切好的菜");
+          }, 1000);
+        });
+        return p;
+      }
+
+      //烧水
+      function boil() {
+        console.log("开始烧水。");
+        var p = new Promise(function (resolve, reject) {
+          //做一些异步操作
+          setTimeout(function () {
+            console.log("烧水完毕！");
+            resolve("烧好的水");
+          }, 1000);
+        });
+        return p;
+      }
+
+      Promise.all([cutUp(), boil()]).then((result) => {
+        console.log("准备工作完毕");
+        console.log(result);
+      });
+      // Promise.race() 类似于Promise.all() ，区别在于它有任意一个完成就算完成
+
+      var array = [10, 20, 9, 8, 79, 65, 100];
+      let sort = array.sort((a, b) => a - b);
+      console.log(sort);
+    </script>
+  </body>
+</html>

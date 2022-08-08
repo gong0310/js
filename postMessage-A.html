@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="openB()">open B</button>
+    <script>
+      // A.html
+      // A打开B并且发送数据给B
+      const msg = "A传过去的";
+      const open = window.open("http://127.0.0.1:5500/postMessage-B.html", "B");
+      function openB() {
+        open.postMessage(msg, "http://127.0.0.1:5500");
+      }
+
+      // A打开B，B发送数据给A
+      window.addEventListener("message", (e) => {
+        if (e.origin === "http://127.0.0.1:5500") {
+          console.log(e.data);
+        }
+      });
+    </script>
+  </body>
+</html>
