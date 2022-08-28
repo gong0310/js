@@ -54,9 +54,16 @@
       console.log("结果=>", proxyUser.name);
       //通过代理对象更新目标对象上的某个属性值
       //-----更改属性值测试
-      proxyUser.name = "小明";
-      console.log("结果=>", proxyUser.name);
-      console.log("结果=>", obj.name);
+      // proxyUser.name = "小明";
+      let { name } = proxyUser;// 解构失去响应式
+      /**
+       * 解构赋值相当于直接跳过了代理那一层，在下面直接获取值，所以 get 和 set 无法被调用
+       * 对于基本数据类型，对象解构时，会丢失原始数据的引用，如果是引用类型， 你再去访问其中的内容的时候并不会失去响应式
+       * 换言之，我们没法让基本数据类型，或者解构后的变量（如果它的值也是基本数据类型的话），成为响应式的数据。
+      */
+      name = "小明";
+      console.log("更改属性值测试 结果=>", proxyUser.name);
+      console.log("更改属性值测试 结果=>", obj.name);
       //-----增加属性值测试
       proxyUser.sax = "男";
       console.log("结果=>", proxyUser);
@@ -66,10 +73,12 @@
       console.log("结果=>", proxyUser);
       console.log("结果=>", obj);
       //-----更改深层次属性值测试
-      proxyUser.wife.name = "小红";
-      console.log("结果=>", proxyUser);
-      console.log("结果=>", obj);
-      delete proxyUser.wife.name;
+      let { wife } = proxyUser; // 解构不会失去响应式
+      wife.name = "小红";
+      // proxyUser.wife.name = "小红";
+      console.log("更改深层次属性值测试 结果=>", proxyUser);
+      console.log("更改深层次属性值测试 结果=>", obj);
+      // delete proxyUser.wife.name;
       console.log("结果=>", obj);
     </script>
   </body>
