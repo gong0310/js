@@ -31,6 +31,16 @@
     <p></p>
     <div></div>
     <script>
+        let kkk=10
+        var objj={
+            kkk:5,
+            say:function(){
+                console.log(this.kkk)
+            }
+        }
+        let testt=objj.say
+        testt()
+        console.log(window.kkk)
         //-----------------
         for (var i = 0; i <= 5; i++) {
             setTimeout(function () {
