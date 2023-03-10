@@ -42,7 +42,7 @@ function testBind(user, car) {
 }
 //跟apply,call不同，bind不会立即执行。会返回一个新的函数
 let t = testBind.bind(obj, '张三')
-t('小六')
+t('奥迪')
 
 //4.实例化的新函数->this指向testbind构造出来的实例
 //5.实例应该继承testBind构造函数上的原型属性
