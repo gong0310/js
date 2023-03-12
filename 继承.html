@@ -7,7 +7,7 @@
     <title>Document</title>
   </head>
   <body>
-    <script src="./es6.js"></script>
+    <!-- <script src="./es6.js"></script> -->
     <script>
       /**
        * 原型链继承
@@ -15,25 +15,25 @@
        * 本质： 是改变 构造函数的.prototype的指向
        */
       // 父类
-      //   function Parent() {
-      //     this.name = ["父类"];
-      //     this.introduce = function () {
-      //       console.log("my name is" + this.name);
-      //     };
-      //   }
-      //   // 子类
-      //   function Child() {
-      //     this.childname = ["子类"];
-      //   }
+        // function Parent() {
+        //   this.name = ["父类"];
+        //   this.introduce = function () {
+        //     console.log("my name is" + this.name);
+        //   };
+        // }
+        // // 子类
+        // function Child() {
+        //   this.childname = ["子类"];
+        // }
 
-      //   // 核心代码：
-      //   Child.prototype = new Parent();
-      //   var child1 = new Child();
-      //   child1.name[0] = "child1唱歌";
-      //   var child2 = new Child();
-      //   child2.name[0] = "child2跳舞";
-      //   console.log(child1.name);
-      //   console.log(child2.name);
+        // // 核心代码：
+        // Child.prototype = new Parent();
+        // var child1 = new Child();
+        // child1.name[0] = "child1唱歌";
+        // var child2 = new Child();
+        // child2.name[0] = "child2跳舞";
+        // console.log(child1.name);
+        // console.log(child2.name);
       // 缺点: 所有新实例都共用父类的属性，如果一个实例修改了原型会影响其它的实例。只能继承一个。
       // 无法向父类传参
 
@@ -41,24 +41,24 @@
        * 构造函数继承
        * 在子类的构造函数中，执行父类的构造函数，并且为其绑定子类的this
        */
-      //   // 父类
-      //   function Parent(name) {
-      //     this.name = ["父类", name];
-      //     this.introduce = function () {
-      //       console.log("父类上的introduce方法", name);
-      //     };
-      //   }
-      //   Parent.prototype.sayhi = function () {
-      //     console.log("父类原型上的sayhi方法");
-      //   };
-      //   // 子类
-      //   function Child(name, like) {
-      //     this.childname = ["子类"];
-      //     Parent.call(this, name, like);
-      //   }
+        // 父类
+        function Parent(name) {
+          this.name = ["父类", name];
+          this.introduce = function () {
+            console.log("父类上的introduce方法", name);
+          };
+        }
+        Parent.prototype.sayhi = function () {
+          console.log("父类原型上的sayhi方法");
+        };
+        // 子类
+        function Child(name, like) {
+          this.childname = ["子类"];
+          Parent.call(this, name, like);
+        }
 
-      //   var child1 = new Child("小红", "apple");
-      //   child1.introduce();
+        var child1 = new Child("小红", "apple");
+        child1.introduce();
       //   child1.sayhi(); //报错
       //   //缺点: 可以继承到父类上的属性和方法，但是继承不到父类原型上的属性和方法
 
@@ -111,6 +111,7 @@
       //     Parent.call(this); // 核心代码
       //   }
       //   Child.prototype = Object.create(Parent.prototype); // 核心代码，利用一个空对象作为中介、将父类原型直接赋值给空对象构造函数的原型
+      // 以父类的prototype为原型，通过Object.create创建子类的prototype
 
       //   const child1 = new Child();
       //   const child2 = new Child();
@@ -126,26 +127,26 @@
        * es6 通过 class 定义一个类，再用 extends 进行继承，通过 super 继承父类的属性或方法
        * 底层类似寄生组合式继承
        */
-      class Parent {
-        constructor(name, age) {
-          this.name = name;
-          this.age = age;
-        }
-        drink() {
-          console.log("喝水");
-        }
-      }
-      class Per extends Parent {
-        constructor(name, age, sex) {
-          super(name, age);
-          this.sex = sex;
-        }
-        drink() {
-          super.drink();
-        }
-      }
-      const p = new Per("Rory", 22, "男");
-      console.log(p);
+      // class Parent {
+      //   constructor(name, age) {
+      //     this.name = name;
+      //     this.age = age;
+      //   }
+      //   drink() {
+      //     console.log("喝水");
+      //   }
+      // }
+      // class Per extends Parent {
+      //   constructor(name, age, sex) {
+      //     super(name, age);
+      //     this.sex = sex;
+      //   }
+      //   drink() {
+      //     super.drink();
+      //   }
+      // }
+      // const p = new Per("Rory", 22, "男");
+      // console.log(p);
     </script>
   </body>
 </html>

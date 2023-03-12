@@ -49,6 +49,9 @@
         //     cancelAnimationFrame(rafId)
         // }
     })();
+    // setInterval 时间可以自定义;requestAnimationFrame是屏幕刷新频率来决定的，更丝滑、流畅
+
+    // 节省了CPU开销：切换到其他页面时，定时器还是存在于内存当中；而requestAnimationFrameh会暂停渲染，页面被激活时动画继续执行
     </script>
   </body>
 </html>
