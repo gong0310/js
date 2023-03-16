@@ -7,38 +7,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        p{
-            height: 1800px;
-            background-color: black;
-        }
-        div{
-            position: fixed;
-            left: 0;
-            top: 0;
-            height: 100vh;
-            background-color: red;
-            opacity: .5;
-            width: 100%;
-            pointer-events:none;
-        }
-        div:hover{
-            background-color: yellow;
-        }
+
     </style>
 </head>
 
 <body>
-    <p></p>
-    <div></div>
+    <input type="text">
     <script>
-        let kkk=10
-        var objj={
-            kkk:5,
-            say:function(){
+        let kkk = 10
+        console.log(window.kkk)
+        var objj = {
+            kkk: 5,
+            say: function () {
                 console.log(this.kkk)
             }
         }
-        let testt=objj.say
+        let testt = objj.say
         testt()
         console.log(window.kkk)
         //-----------------
@@ -59,7 +43,7 @@
         //------------------
         console.log('==============预解析1');
         function fun(n) {
-            // 先预解析(变量提升)var n=undefinde;然后n=n
+            // 先预解析(变量提升)var n=undefinde;然后n=123
             console.log(n) //123
             var n = 456
             console.log(n) //456
@@ -143,7 +127,7 @@
             }
         }
         var p = new fun()
-        console.log(p.name)//jack
+        console.log(p, p.name)//jack
         //---------------
         var fun = function () { }
         fun.prototype = {
@@ -202,13 +186,13 @@
                 for (let j = handle.length - 1; j >= 0; j--) {
                     //B是每一次要比较的牌
                     const B = handle[j];
-                    if(A>B){//把B放到A后面，终止循环
+                    if (A > B) {//把B放到A后面，终止循环
                         //j是B是索引,删除0项就是添加,A
-                        handle.splice(j+1,0,A)
+                        handle.splice(j + 1, 0, A)
                         break;
                     }
                     //比到第一项，把牌放到最前面
-                    if(j==0){
+                    if (j == 0) {
                         handle.unshift(A)
                     }
                 }
@@ -221,6 +205,85 @@
         //  a && console.log(a.b)
 
         //  console.log(a?.b)
+
+        let input = document.querySelector('input')
+
+        input.oninput = antiShake(() => {
+            console.log('结果=>', '66');
+        }, 1000)
+
+        // 防抖
+        // function antiShake(fn, time,a=1) {
+        //     let timer = null
+        //     return (...arg) => {
+        //         if (time) {
+        //             clearTimeout(timer)
+        //         }
+        //         console.log('结果=>',arg); // arguments中存着e
+        //         timer = setTimeout(() => {
+        //             fn.apply(this, arg)
+        //         }, time)
+        //     }
+        // }
+
+        // 节流
+        function antiShake(fn, time) {
+            let timer = null
+            return (...agrs) => {
+                if (!timer) {
+                    timer = setTimeout(() => {
+                        timer = null
+                        fn.apply(this.agrs)
+                    }, time)
+                }
+            }
+        }
+
+        let arr1 = [10, 2, 6, 5, 9, 6, 2, 6, 3]
+        // let newArr = Array.from(new Set(arr1))
+        let newArr = []
+        // arr1.forEach(i => {
+        //     if (!newArr.includes(i)) {
+        //         newArr.push(i)
+        //     }
+        // })
+        // arr1.forEach(i => {
+        //     if (newArr.indexOf(i)<0) {
+        //         newArr.push(i)
+        //     }
+        // })
+        function demo(arr1) {
+            for (let i = 0; i < arr1.length; i++) {
+                for (let j = i + 1; j < arr1.length; j++) {
+                    if (arr1[i] == arr1[j]) {
+                        arr1.splice(j, 1)
+                        j--
+                    }
+                }
+
+            }
+            return arr1
+        }
+
+        console.log('去重', newArr, demo(arr1))
+
+        let arr2 = [10, [2, 6, 5, [9, 6], 2], 6, 3]
+        // let newArr1 = arr2.flat(Infinity)
+        // let newArr1 = arr2.toString().split(',')
+        // let newArr1 = arr2.join(',').split(',')
+        let newArr1 = []
+        function flatten(arrvalue) {
+            arrvalue.forEach(i => {
+                if (Array.isArray(i)) {
+                    flatten(i)
+                } else {
+                    newArr1.push(i)
+                }
+            })
+        }
+        flatten(arr2)
+        console.log('扁平化', newArr1)
+
     </script>
 </body>
 
