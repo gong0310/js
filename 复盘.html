@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <pre>
+        const weak = new WeakMap();
+
+        // WeakSet 只能储存弱引用对象，不能存放普通值，而 Set 对象都可以
+        // 可以被垃圾回收机制回收，不能遍历，方法有add、delete、has
+        // 即垃圾回收机制不考虑 WeakSet 对该对象的应用，如果没有其他的变量或属性引用这个对象值，
+        // 则这个对象将会被垃圾回收掉（不考虑该对象还存在于 WeakSet 中），所以，
+        // WeakSet 对象里有多少个成员元素，取决于垃圾回收机制有没有运行，运行前后成员个数可能不一致，
+        // 遍历结束之后，有的成员可能取不到了（被垃圾回收了）
+
+        /**
+         * WeakMap 对象是一组键值对的集合，只接受对象作为键名（null除外），而值可以是任意
+         * 键名所指向的对象可以被垃圾回收
+         * 不能遍历，方法有get、set、has、delete
+        */
+        const arr = [1, [1, 2], [3, 4]] // 1报错
+        const weakset = new WeakSet(arr)
+        console.log(weakset)
+        
+       --------------------------------------
+        /**
+        * for不遍历某个属性js
+       */
+       let myPrototype = {
+           id: '1',
+           name: '小明'
+       }
+       // 劫持修改默认操作
+       Object.defineProperty(myPrototype, 'name', {
+           enumerable: false, // 不可枚举属性
+       })
+       for (const iterator in myPrototype) {
+           console.log('结果=>', iterator);
+       }
+
+       --------------------------------------
+       // react key变化，react利用key来识别组件，它是一种身份标识标识
+       /**
+        *  1) key相同，若组件属性有所变化，则react只更新组件对应的属性；没有变化则不更新。
+        *  2) key值不同，则react先销毁该组件(有状态组件的componentWillUnmount会执行)，然后重新创建该组件。
+        *  3) setState：谁用到了所更新的state，就会刷新该组件，render也并不是所有都会变化，只变state改变的部分。
+       */
+
+       --------------------------------------
+       // Promise.all方法的参数可以不是数组，但必须具有 Iterator 接口，且返回的每个成员都是 Promise 实例
+
+
+       --------------------------------------
+       /**
+        * 异步编程解决方案
+        * Generator 函数的调用方法与普通函数一样,特征：
+        * 1、function关键字与函数名之间有一个星号
+        * 2、函数体内部使用yield表达式，定义不同的内部状态
+        * 3、调用 Generator 函数后，该函数并不执行，返回的也不是函数运行结果，必须调用遍历器对象的next方法，使得指针移向下一个状态
+       */
+       function* helloWorldGenerator() {
+           yield 'hello'; // 暂停执行后面的操作，调用next方法时，再继续往下执行，直到遇到下一个yield表达式
+           yield 'world';
+           return 'ending';
+       }
+       // return：在程序函数中返回某个值，函数不在继续执行，彻底结束。
+       // yield: 会停留在某个位置，返回函数值后，会在前面停留的位置继续执行，直到程序结束
+       var hw = helloWorldGenerator();
+       console.log('hw.next()', hw.next()); // { value: 'hello', done: false }
+       console.log('hw.next()', hw.next()); // { value: 'world', done: false }
+       console.log('hw.next()', hw.next()); // { value: 'ending', done: true }
+       console.log('hw.next()', hw.next()); // { value: 'undefined', done: true }
+
+
+       iterator--------------------------------------
+       // 可迭代对象， 需要具备 Symbol.iterator和 next这两个函数，即可用 for...of进行迭代
+       // var myIterator = {
+       //     next: function () {
+       //         // ...
+       //     },
+       //     [Symbol.iterator]: function () { return this }
+       // }
+       let SimpleClass = {
+           data: [1, 2, 3, 4, 5],
+           [Symbol.iterator]() {
+               let index = 0;
+               return {
+                   next: () => {
+                       if (index < this.data.length) {
+                           return { value: this.data[index++], done: false }
+                       } else {
+                           return { done: true }
+                       }
+                   }
+               }
+           }
+       }
+       for (const val of SimpleClass) {
+           console.log(val)   //'1' '2' '3' '4' '5'
+       }
+
+       创建私有作用域-------------------------
+       (function () {
+           for (var index = 0; index < 5; index++) {
+               console.log('创建私有作用域=>', index); // 0 1 2 3 4
+           }
+       })()
+
+       http--------------------------------------
+       /**
+        * http 1:
+        * 缺陷：线程阻塞，在同一时间，同一域名的请求有一定数量限制，超过限制数目的请求会被阻塞。
+        * 
+        * http 2:采用二进制格式而非文本格式，完全多路复用，只需一个连接即可实现并行；
+        * 解决了线头阻塞的问题(与Http1最重要的区别)
+        * 使用报头压缩，降低开销服务器推送
+       */
+
+
+      扁平化 --------------------------------------
+       //调用 ES6 中的 flat 方法
+       console.log([1, [2, 3, [4, 5, [6, 7]]]].flat(Infinity));
+       //普通递归
+       let result = [];
+       let flatten = function (arr) {
+         for (let i = 0; i < arr.length; i++) {
+           let item = arr[i];
+           if (Array.isArray(arr[i])) {
+             flatten(item);
+           } else {
+             result.push(item);
+           }
+         }
+         return result;
+       };
+ 
+       //toString & split
+       function flatten1(arr) {
+         return arr
+           .toString()
+           .split(",")
+           .map(function (item) {
+             return Number(item);
+           });
+       }
+       let test = [1, ["2", 3, [4, 5, [6, 7]]]];
+ 
+       console.log("===>", test.join(","));
+ 
+       //join & split
+       function flatten2(arr) {
+         return arr
+           .join(",")
+           .split(",")
+           .map(function (item) {
+             return parseInt(item);
+           });
+       }
+       //reduce
+       function flatten3(arr) {
+         return arr.reduce((result, item) => {
+           return result.concat(Array.isArray(item) ? flatten3(item) : item);
+         }, []);
+       }
+       //扩展运算符
+       function flatten4(arr) {
+         while (arr.some((item) => Array.isArray(item))) {
+           arr = [].concat(...arr);
+         }
+         return arr;
+       }
+       let arr = [1, "2", [3, 4], [5, [6, 7]]];
+       console.log(flatten4(arr));
+
+       数组去重 // --------------------------------------
+       //数组去重
+       let aa = [1, 2, 2, 4, 9, 6, 7, 5, 2, 3, 5, 6, 5];
+       let newaa = [];
+       // includes/indexOf同理
+       aa.forEach((i) => {
+         if (!newaa.includes(i)) {
+           newaa.push(i);
+         }
+       });
+       console.log("结果=>", newaa);
+ 
+       //利用 ES6 的 set 方法
+       // Set和Map类似，也是一组key的集合，但不存储value。由于key不能重复，所以，在Set中，没有重复的key。
+       function lyf(arr) {
+         console.log("结果=>", "new Set(arr)", new Set(arr));
+ 
+         return Array.from(new Set(arr)); // 利用Array.from将Set结构转换成数组
+       }
+       console.log(lyf(aa));
+ 
+       //双重for循环
+       function lyf2(arr) {
+         for (var i = 0; i < arr.length; i++) {
+           for (var j = i + 1; j < arr.length; j++) {
+             if (arr[i] == arr[j]) {
+               //如果第一个等于第二个，splice方法删除第二个
+               arr.splice(j, 1);
+               j--;
+             }
+           }
+         }
+         return arr;
+       }
+
+       防抖、节流  --------------------------------------
+       // 防抖
+       // function antiShake(fn, time,a=1) {
+       //     let timer = null
+       //     return (...arg) => {
+       //         if (time) {
+       //             clearTimeout(timer)
+       //         }
+       //         console.log('结果=>',arg); // arguments中存着e
+       //         timer = setTimeout(() => {
+       //             fn.apply(this, arg)
+       //         }, time)
+       //     }
+       // }
+
+       // 节流
+       function antiShake(fn, time) {
+           let timer = null
+           return (...agrs) => {
+               if (!timer) {
+                   timer = setTimeout(() => {
+                       timer = null
+                       fn.apply(this.agrs)
+                   }, time)
+               }
+           }
+       }
+     数结构  --------------------------------------
+       /**
+       * 1、将parentId字段添加到子节点，这样我们就建立了子节点到父节点的关联
+       * 2、根据父节点id一层一层往外查
+      */
+      // 查找节点的父元素
+      function familyTree(arr1, id) {
+          // 返回数据集合
+          var temp = [];
+          // 声明digui函数
+          var forFn = function (arr, id) {
+              // 遍历树
+              for (var i = 0; i < arr.length; i++) {
+                  var item = arr[i];
+                  if (item.id === id) {
+                      // 查找到指定节点加入集合
+                      temp.push(item.id);
+                      // 查找其父节点
+                      forFn(arr1, item.parentId);
+                      // 不必向下遍历，跳出循环
+                      break;
+                  } else {
+                      if (item.children) {
+                          // 向下查找到id
+                          forFn(item.children, id);
+                      }
+                  }
+              }
+          };
+          // 调用函数
+          forFn(arr1, id);
+          // 返回结果
+          return temp;
+      }
+
+    排序 --------------------------------------
+       sort数组方法
+       // 冒泡排序
+       function bubbleSort(arr) {
+           let temp;
+           for (let i = 0; i < arr.length - 1; i++) {//循环的趟数
+               for (let j = 0; j < arr.length - 1 - i; j++) {
+                   // 每一趟把最大的往后挤后(放末尾)，挤完就不用管了，就不用再参加循环了，
+                   // 5个数放4次(循环的趟数)就可以了， len - 1
+                   if (arr[j] > arr[j + 1]) {
+                       temp = arr[j + 1]
+                       arr[j + 1] = arr[j]
+                       arr[j] = temp
+                   }
+               }
+           }
+
+           return arr;
+       }
+       console.log('结果=>', bubbleSort(suanArr));
+       // 插入排序
+       function insertSort(array) {
+           //1.准备一个数组，来存储抓的牌，一开始先抓一张
+           let handle = []
+           handle.push(arr[0])
+           //2.从第二张开始依次抓，一直到牌抓光
+           for (let i = 1; i < array.length; i++) {
+               //A是新抓的牌
+               const A = array[i];
+               //和handle里的牌依次比较(从后向前比)
+               for (let j = handle.length - 1; j >= 0; j--) {
+                   //B是每一次要比较的牌
+                   const B = handle[j];
+                   if (A > B) {//把B放到A后面，终止循环
+                       //j是B是索引,删除0项就是添加,A
+                       handle.splice(j + 1, 0, A)
+                       break;
+                   }
+                   //比到第一项，把牌放到最前面
+                   if (j == 0) {
+                       handle.unshift(A)
+                   }
+               }
+           }
+           return handle;
+       }
+    </pre>
+    <img src="./imgs/排序.png" style="width: 70%;" alt="">
+    <script>
+        /**
+         * wekset和wekmap
+         * 
+        */
+
+        /**
+         * for不遍历某个属性js
+        */
+        let myPrototype = {
+            id: '1',
+            name: '小明'
+        }
+        // 劫持修改默认操作
+        Object.defineProperty(myPrototype, 'name', {
+            enumerable: false, // 不可枚举属性
+        })
+        for (const iterator in myPrototype) {
+            console.log('结果=>', iterator);
+        }
+        // react key变化，react利用key来识别组件，它是一种身份标识标识
+        /**
+         *  1) key相同，若组件属性有所变化，则react只更新组件对应的属性；没有变化则不更新。
+         *  2) key值不同，则react先销毁该组件(有状态组件的componentWillUnmount会执行)，然后重新创建该组件。
+         *  3) setState：谁用到了所更新的state，就会刷新该组件，render也并不是所有都会变化，只变state改变的部分。
+        */
+        // Promise.all方法的参数可以不是数组，但必须具有 Iterator 接口，且返回的每个成员都是 Promise 实例
+
+
+
+        /**
+         * 异步编程解决方案
+         * Generator 函数的调用方法与普通函数一样,特征：
+         * 1、function关键字与函数名之间有一个星号
+         * 2、函数体内部使用yield表达式，定义不同的内部状态
+         * 3、调用 Generator 函数后，该函数并不执行，返回的也不是函数运行结果，必须调用遍历器对象的next方法，使得指针移向下一个状态
+        */
+        function* helloWorldGenerator() {
+            yield 'hello'; // 暂停执行后面的操作，调用next方法时，再继续往下执行，直到遇到下一个yield表达式
+            yield 'world';
+            return 'ending';
+        }
+        // return：在程序函数中返回某个值，函数不在继续执行，彻底结束。
+        // yield: 会停留在某个位置，返回函数值后，会在前面停留的位置继续执行，直到程序结束
+        var hw = helloWorldGenerator();
+        console.log('hw.next()', hw.next()); // { value: 'hello', done: false }
+        console.log('hw.next()', hw.next()); // { value: 'world', done: false }
+        console.log('hw.next()', hw.next()); // { value: 'ending', done: true }
+        console.log('hw.next()', hw.next()); // { value: 'undefined', done: true }
+
+
+        // 可迭代对象， 需要具备 Symbol.iterator和 next这两个函数，即可用 for...of进行迭代
+        // var myIterator = {
+        //     next: function () {
+        //         // ...
+        //     },
+        //     [Symbol.iterator]: function () { return this }
+        // }
+        let SimpleClass = {
+            data: [1, 2, 3, 4, 5],
+            [Symbol.iterator]() {
+                let index = 0;
+                return {
+                    next: () => {
+                        if (index < this.data.length) {
+                            return { value: this.data[index++], done: false }
+                        } else {
+                            return { done: true }
+                        }
+                    }
+                }
+            }
+        }
+        for (const val of SimpleClass) {
+            console.log(val)   //'1' '2' '3' '4' '5'
+        }
+
+        (function () {
+            for (var index = 0; index < 5; index++) {
+                console.log('创建私有作用域=>', index); // 0 1 2 3 4
+            }
+        })()
+
+        /**
+         * http 1:
+         * 缺陷：线程阻塞，在同一时间，同一域名的请求有一定数量限制，超过限制数目的请求会被阻塞。
+         * 
+         * http 2:采用二进制格式而非文本格式，完全多路复用，只需一个连接即可实现并行；
+         * 解决了线头阻塞的问题(与Http1最重要的区别)
+         * 使用报头压缩，降低开销服务器推送
+        */
+
+
+        let data = [
+            {
+                "id": 1,
+                "label": "猫爷爷",
+                "children": [
+                    {
+                        "id": 2,
+                        "label": "猫爸1",
+                        "children": [
+                            {
+                                "id": 3,
+                                "label": "猫崽1-1",
+                            },
+                            {
+                                "id": 4,
+                                "label": "猫崽1-2",
+                            }
+                        ],
+                    },
+                    {
+                        "id": 5,
+                        "label": "猫爸2",
+                        "children": [
+                            {
+                                "id": 6,        //根据这个id，查找它的所有上级
+                                "label": "猫崽2-1",
+                            },
+                            {
+                                "id": 7,
+                                "label": "猫崽2-2",
+                            },
+                        ],
+                    },
+                ]
+            },
+            {
+                "id": 8,
+                "label": "猪爷爷",
+                "children": [
+                    {
+                        "id": 9,
+                        "label": "猪爸1",
+                        "children": [
+                            {
+                                "id": 10,
+                                "label": "猪崽1",
+                            },
+                            {
+                                "id": 11,
+                                "label": "猪崽2",
+                            }
+                        ],
+                    },
+                ]
+            }
+        ]
+        console.log('结果=>', familyTree(data, 7));
+
+        /**
+         * 1、将parentId字段添加到子节点，这样我们就建立了子节点到父节点的关联
+         * 2、根据父节点id一层一层往外查
+        */
+        // 查找节点的父元素
+        function familyTree(arr1, id) {
+            // 返回数据集合
+            var temp = [];
+            // 声明digui函数
+            var forFn = function (arr, id) {
+                // 遍历树
+                for (var i = 0; i < arr.length; i++) {
+                    var item = arr[i];
+                    if (item.id === id) {
+                        // 查找到指定节点加入集合
+                        temp.push(item.id);
+                        // 查找其父节点
+                        forFn(arr1, item.parentId);
+                        // 不必向下遍历，跳出循环
+                        break;
+                    } else {
+                        if (item.children) {
+                            // 向下查找到id
+                            forFn(item.children, id);
+                        }
+                    }
+                }
+            };
+            // 调用函数
+            forFn(arr1, id);
+            // 返回结果
+            return temp;
+        }
+
+        const weak = new WeakMap();
+
+        // WeakSet 只能储存弱引用对象，不能存放普通值，而 Set 对象都可以
+        // 可以被垃圾回收机制回收，不能遍历，方法有add、delete、has
+        // 即垃圾回收机制不考虑 WeakSet 对该对象的应用，如果没有其他的变量或属性引用这个对象值，
+        // 则这个对象将会被垃圾回收掉（不考虑该对象还存在于 WeakSet 中），所以，
+        // WeakSet 对象里有多少个成员元素，取决于垃圾回收机制有没有运行，运行前后成员个数可能不一致，
+        // 遍历结束之后，有的成员可能取不到了（被垃圾回收了）
+
+        /**
+         * WeakMap 对象是一组键值对的集合，只接受对象作为键名（null除外），而值可以是任意
+         * 键名所指向的对象可以被垃圾回收
+         * 不能遍历，方法有get、set、has、delete
+        */
+        // const arr = [1, [1, 2], [3, 4]] // 1报错
+        // const weakset = new WeakSet(arr)
+        // console.log(weakset)
+
+
+    </script>
+</body>
+
+</html>

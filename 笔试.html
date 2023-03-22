@@ -28,12 +28,12 @@
         //-----------------
         for (var i = 0; i <= 5; i++) {
             setTimeout(function () {
-                console.log(i) //i指向的都是同一个变量全局i
+                console.log('111',i) //i指向的都是同一个变量全局i
             }, 0)
         } //6个6,js是单线程，对于setTimeout异步,先放在等待队列里面，等执行完主线程for
         console.log(i) //6
         //-----------------
-        for (let j = 0; j <= 5; j++) {
+        for (let j = 0; j < 5; j++) {
             setTimeout(function () {
                 console.log(j)
             }, 0)
