@@ -526,6 +526,33 @@
         // const weakset = new WeakSet(arr)
         // console.log(weakset)
 
+        /**
+         * vue2.0开始支持虚拟dom
+         * vue1.0是操作的是真的dom元素
+        */
+
+        //------------------------------
+        // 函数声明提升
+        function foo(x, y) {
+            return x + y
+        }
+        var foo
+        var num
+        // 函数表达式不提升
+        foo = function (x, y) {
+            return x - y
+        }
+        // 函数提升优先级⽐变量提升要⾼，且不会被变量声明覆盖，但是会被变量赋值覆盖。
+        // 在这里函数声明提升到最顶部，之后又被函数表达式覆盖了，故这里的foo已经重新被赋值为function(){x-y}了
+        num = foo(1, 2)  //故输出结果为1-2=-1
+
+        console.log(foo);// fn foo
+        function foo() {
+            console.log("函数声明");
+        }
+        var foo = "变量";
+        console.log(foo); // 变量
+
 
     </script>
 </body>
