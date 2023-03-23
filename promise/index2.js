@@ -43,6 +43,9 @@ Promise.all([
   });
 
 // Promise.allSettled
+// Promise.allSettled跟Promise.all类似, 其参数接受一个Promise的数组, 返回一个新的Promise, 
+// 唯一的不同在于, 其不会进行短路, 也就是说当Promise全部处理完成后我们可以拿到每个Promise的状态,
+//  而不管其是否处理成功.
 
 //谁先完成就返回那个promise的结果,不论是resolve reject，反正就是返回最快的
 //可以测试资源或接口的响应速度

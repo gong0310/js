@@ -14,7 +14,7 @@
 14.for不遍历某个属性js https://blog.csdn.net/ccuucc/article/details/123946440
 15.让一个对象具有iterator
 
-16. react usefeatch封装  https://blog.csdn.net/weixin_39922147/article/details/112619337
+16. react usefeatch封装  https://blog.csdn.net/weixin_39922147/article/details/112619337  https://blog.csdn.net/weichushun/article/details/123043355
 17.react怎么实现双向数据流，不是双向绑定
 18.vue跟react的渲染机制有什么不同，底层原理有什么不同
 19.vue2.开始有虚拟dom
