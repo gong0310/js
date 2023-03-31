@@ -41,7 +41,7 @@
         },
         //set方法不仅能修改还能为目标对象增加属性值
         set(target, prop, newval) {
-          console.log("set");
+          console.log("set",target, prop, newval);
           return Reflect.set(target, prop, newval);
         },
         //deleteProperty删除目标对象的某个属性值
