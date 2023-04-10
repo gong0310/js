@@ -1,16 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>demo</title>
+    <!-- <script src="./3年-龚正平-乐牧科技.js"></script> -->
 </head>
+
 <body>
     <script>
-        /**
-         * 数据结构：计算机存储或组织数据的方式
-        */
+        const arr1 = [1, 6, 555, 232, 56, 4]
+        const arr2 = [6, 355, 1232, 56, 4, 66]
+
+        const add = []
+        const del = []
+        arr1.forEach(i => {
+            if (!arr2.find(j => i === j)) {
+                del.push(i)
+            }
+        })
+        arr2.forEach(i => {
+            if (!arr1.find(j => i === j)) {
+                add.push(i)
+            }
+        })
+        console.log('add=>', add);
+        console.log('del=>', del);
+
     </script>
 </body>
+
 </html>
